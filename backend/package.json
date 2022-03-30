@@ -1,0 +1,31 @@
+{
+  "name": "get_a_cat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./index.js localhost 5000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Trocoli/get-a-cat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Trocoli/get-a-cat/issues"
+  },
+  "homepage": "https://github.com/Trocoli/get-a-cat#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.7",
+    "multer": "^1.4.4",
+    "nodemon": "^2.0.15"
+  }
+}
