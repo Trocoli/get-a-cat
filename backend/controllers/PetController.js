@@ -130,7 +130,9 @@ module.exports = class PetController {
         const pet = await Pet.findOne({_id: id})
         if(!pet) {
             res.status(404).json({message: 'Pet not found!'})
+            return
         }
+
 
         // check logged user if is owner 
         const token = getToken(req)
@@ -140,9 +142,140 @@ module.exports = class PetController {
             res.status(422).json({
                 message: 'Only the owner can delete a pet'
             })
+            return
         }
         await Pet.findByIdAndRemove(id)
         res.status(200).json({message: "Successfully removed pet"})
+    }
+
+    static async updatePet(req, res) {
+        const id = req.params.id
+        const {name, age, weight, color, available} = req.body
+        const images = req.files
+        const updatedData = {}
+
+        // check if pet exists 
+        const pet = await Pet.findOne({_id: id})
+        if(!pet) {
+            res.status(404).json({message: 'Pet not found!'})
+            return
+        }
+                // check logged user if is owner 
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+
+        if(pet.user._id.toString() !== user._id.toString()) {
+            res.status(422).json({
+                message: 'Only the owner can edit a pet'
+            })
+            return
+        }
+
+        
+        if(!name) {
+            res.status(422).json({message: 'You must enter a name'})
+            return
+        }else {
+            updatedData.name = name
+        }
+        if(!age) {
+            res.status(422).json({message: 'You must enter an age'})
+            return
+        }else{
+            updatedData.age = age
+        }
+        if(!weight) {
+            res.status(422).json({message: 'You must enter a weight'})
+            return
+        }else {
+            updatedData.weight = weight
+        }
+        if(!color) {
+            res.status(422).json({message: 'You must enter a color'})
+            return
+        }else {
+            updatedData.color = color 
+        }
+        if(images.length === 0) {
+            res.status(422).json({message: 'You must insert at least one picture'})
+            return
+        }else {
+            updatedData.images = []
+            images.map((images) => {
+                updatedData.images.push(images.filename)
+            })
+        }
+        await Pet.findByIdAndUpdate(id, updatedData)
+        res.status(200).json({message: "pet updated!"})
+      
+    }
+
+    static async schedule(req, res) {
+
+        const id = req.params.id
+        // check if pet exists
+        const pet = await Pet.findOne({_id: id})
+        if(!pet) {
+            res.status(404).json({message: 'Pet not found!'})
+            return
+        }
+        // check if user is owner of pet 
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+
+        if(pet.user._id.equals(user._id)) {
+            res.status(422).json({
+                message: 'You can\'t schedule a visit to adopt your own pet. '
+            })
+            return
+        }
+        // check if user ha already scheduled a visit
+        if(pet.adopter) {
+            if(pet.adopter._id.equals(user._id)){
+                res.status(422).json({
+                    message: 'You already shceduled a visit.'
+                })
+                return
+            }
+        }
+        // add user to pet
+        pet.adopter = {
+            _id: user._id,
+            name: user.name,
+            image: user.image
+        }
+        await Pet.findByIdAndUpdate(id, pet)
+        res.status(200).json({
+            message: `Visit scheduled successfully, contact ${pet.user.name} on ${pet.user.phone}`
+        })
+    }
+
+    static async concludeAdoption(req, res) {
+
+        const id = req.params.id
+        // check if pet exists
+        const pet = await Pet.findOne({_id: id})
+        if(!pet) {
+            res.status(404).json({message: 'Pet not found!'})
+            return
+        
+        }
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+        if(pet.user._id.toString() !== user._id.toString()) {
+            res.status(422).json({
+                message: 'Only the owner can access this'
+            })
+            return
+        }
+
+        pet.available = false
+        await Pet.findByIdAndUpdate(id, pet)
+        res.status(200).json({
+            message: 'Pet was adopetd!'
+        })
+
+
     }
 
 }
