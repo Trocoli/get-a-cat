@@ -10,6 +10,7 @@ function PetForm({handleSubmit, petData, btnText}) {
     const colors = ["Black", "White", "Gray", "Caramel"]
 
     function onFileChange(e) {
+        console.log(Array.from(e.target.files))
         setPreview(Array.from(e.target.files))
         setPet({...pet, images:[...e.target.files]})
     }
@@ -84,6 +85,7 @@ function PetForm({handleSubmit, petData, btnText}) {
             options={colors}
             handleOnChange={handleColors}
             value={pet.color || ''}
+            multiple={true}
             />
             <input type='submit' value='Save' />
         </form> 

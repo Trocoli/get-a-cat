@@ -196,10 +196,7 @@ module.exports = class PetController {
         }else {
             updatedData.color = color 
         }
-        if(images.length === 0) {
-            res.status(422).json({message: 'You must insert at least one picture'})
-            return
-        }else {
+        if(images.length > 0) {
             updatedData.images = []
             images.map((images) => {
                 updatedData.images.push(images.filename)
