@@ -18,6 +18,7 @@ function Profile() {
     const [token] = useState(localStorage.getItem('token') || '')
     const {setFlashMessage} = useFlashMessage()
 
+    console.log(UserProvider)
     useEffect(() => {
         api.get('users/checkuser', {
             headers: {
@@ -59,7 +60,7 @@ function Profile() {
     }   
 
     return (
-        <selection>
+        <section>
             <div className={styles.profile_header}>
             <h1>
                 Profile
@@ -112,7 +113,7 @@ function Profile() {
                 />
             <input type="submit" value="Edit"/>
             </form>
-        </selection>
+        </section>
     )
 }
 export default Profile

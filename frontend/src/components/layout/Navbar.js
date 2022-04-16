@@ -22,19 +22,22 @@ function Navbar() {
                 </li>
                 {authenticated ? (
                     <>
-                    <li>
-                        <Link to='/user/profile'>Profile</Link>
-                    </li>
-                    <li onClick={logout}>Log out</li>
+                        <li>
+                            <Link to='/pets/mypets'>My Pets</Link>
+                        </li>
+                        <li>
+                            <Link to='/user/profile'>Profile</Link>
+                        </li>
+                        <li onClick={logout}>Log out</li>
                     </>
-                ):(
+                ) : (
                     <>
-                    <li>
-                        <Link to="/login">Login</Link>
-                    </li>
-                    <li>
-                        <Link to="/register">Register </Link>
-                    </li>
+                        <li>
+                            <Link to="/login">Login</Link>
+                        </li>
+                        <li>
+                            <Link to="/register">Register </Link>
+                        </li>
                     </>
                 )
 
